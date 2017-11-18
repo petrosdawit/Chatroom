@@ -1,0 +1,24 @@
+{
+  "name": "realtime",
+  "version": "6.9.5",
+  "description": "assignment for cs132",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "pdawit",
+  "license": "ISC",
+  "dependencies": {
+    "any-db": "^2.2.0",
+    "any-db-sqlite3": "^2.1.4",
+    "body-parser": "1.17.1",
+    "consolidate": "0.14.5",
+    "express": "4.15.2",
+    "hogan.js": "3.0.2",
+    "package.json": "2.0.1",
+    "socket.io": "^1.7.3",
+    "sqlite3": "3.1.13"
+  },
+  "devDependencies": {}
+}

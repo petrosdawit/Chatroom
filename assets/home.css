@@ -1,0 +1,31 @@
+body {
+	color:blue;
+	text-align: center;
+	position: relative;
+	justify-content: center;
+	margin: 0 auto;
+	max-width: 500px;
+	position:relative;
+	padding-top: 100px;
+}
+
+button[type=submit], input[type=submit]{
+	display: inline-block;
+	font-size: 16px;
+	background:#d8eaff;
+	border-radius: 5%;
+}
+
+button[type=submit]:hover {
+  font-weight: bold;
+}
+
+input[type=submit]:hover {
+  font-weight: bold;
+}
+
+.copyright {
+  position: relative;
+  top: 50px; 
+  text-align: center; 
+}

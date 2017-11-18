@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Realtime</title>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="/css/home.css"> 
+
+</head>
+
+<body>
+
+    <h1>Realtime Chatroom</h1>
+    <h4>Please feel free to enter an already existing chatroom in the search bar or create a new one
+    by clicking the 'Create' button </h4>
+    <input type="text" id = 'roomSearch' name="ChatroomSearchName">
+    <br><br>
+    <input type="submit" onclick="location.href = '/'+document.getElementById('roomSearch').value;" value="Search">
+    <br><br>
+    <form action = "/createRoom" method = "POST">
+        <button type = "submit" id="createNewRoom">  Create </button>
+    </form>    
+
+    <div class = copyright>
+        <p> </p> <br> <p> </p>
+        <em> &copy; 2017 Petros Dawit</em> <br>
+        <p> </p> <br> <p> </p>
+    </div>
+
+</body>
+
+</html>

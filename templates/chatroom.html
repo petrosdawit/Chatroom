@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Room: {{roomName}}</title>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../realtime/server.js"></script>
+
+    <link rel="stylesheet" href="/css/chatroom.css"> 
+
+    <meta name='roomName' content='{{roomName}}'>
+
+</head>
+
+<body>
+
+    <div class="chatroom">
+        <h3> Welcome to Room {{roomName}} </h3>
+        <h4> Active Members </h4>
+        <ul class ="members" id ="members"> </ul>
+        <ul class="messages" id="messageBoard"> </ul>
+        <textarea id="messageField" name= "message" placeholder="Type a message here..."></textarea> <br> <br>
+        <button type = "button" onclick="location.href='/';">  Back </button> 
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button type = "button" id="changeName"> Change Nickname </button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button type = "button" id="postMessageButton"> Send </button>
+        <p id = roomName> <span style="color:white"> {{roomName}} </span><p>  
+    </div>
+
+    <script>
+    var socket = io();
+
+    var nick = "";
+
+    $(document).ready(function(){
+
+        nick = prompt('Enter a nickname:');
+        if (nick == null){
+            nick = "";
+        }
+
+        socket.emit('join', {roomName: meta('roomName'), nickname: nick});
+
+        socket.on('messages', function(messages) {
+            console.log(messages);
+            addAllMessages(messages);
+        });
+
+        $("#postMessageButton").click(function(event){
+            event.preventDefault(); 
+            socket.emit('chat message', { nickname: nick, message: $('#messageField').val(), roomName: meta('roomName')});
+        });
+
+        socket.on('membership', function(members){
+            $('#members').empty();
+            console.log(members.nicknames);
+            for(var i = 0; i < members.nicknames.length; i++){
+                 $('#members').prepend("<li><div class='messageOne'> &#8226; " + members.nicknames[i] + "</div></li>");
+            }
+        });
+
+        $("#changeName").click(function(event){
+            event.preventDefault(); 
+            nick = prompt('Enter a nickname:');
+            if (nick == null){
+                nick = "";
+            }
+            socket.emit('changeNick', { nickname: nick, roomName: meta('roomName')});
+        });
+    });
+
+
+    function addAllMessages(data){
+        var el = document.getElementById('messageBoard');
+        while(el.hasChildNodes()){
+            el.removeChild(el.lastChild);
+        }
+        var messagesData = []
+        for (var i = data.length-1; i >= 0; i--){
+            messagesData.push(data[i]);
+        }
+        for(var i = 0; i < messagesData.length; i++) {
+            var nickname = messagesData[i].nickname;
+            var body = messagesData[i].body;
+            var time = messagesData[i].time;
+            addNewMessage(nickname, body, time);
+        } 
+        el.scrollTop = el.scrollHeight;      
+    }
+
+    function addNewMessage(nickname, body, time){
+        $('#messageBoard').prepend("<li><div class='messageOne'> <span style=\"color:red\">" + convertTime(time) + "&nbsp &nbsp" + nickname + "</span> : &nbsp &nbsp" + body + "</div></li>");
+    }
+
+    function meta(name) {
+        var tag = document.querySelector('meta[name=' + name + ']');
+        if(tag != null) {
+            return tag.content;
+        }
+        return '';
+    }
+
+    function convertTime(time){
+        var d = new Date(time);
+        var h = d.getHours();
+        var m = d.getMinutes();
+        if (m <= 9){
+            m = '0'+m;
+        }
+        return h+":"+m;
+    }
+
+    </script>
+
+
+</body>
+</html>
